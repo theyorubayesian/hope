@@ -14,10 +14,10 @@ from pymongo import MongoClient
 from pymongo.collection import Collection
 from pymongo.errors import DuplicateKeyError
 
-from twitter.graph import get_graphing_info
-from twitter.graph import Edge
-from twitter.graph import Node
-from twitter.item import TweetItem
+from hope.twitter.graph import get_graphing_info
+from hope.twitter.graph import Edge
+from hope.twitter.graph import Node
+from hope.twitter.item import TweetItem
 
 
 class DatabaseClient(ABC):

@@ -3,8 +3,8 @@ from typing import Optional
 
 import tweepy
 
-from twitter.database import DatabaseClient
-from twitter.item import TweetItem
+from hope.twitter.database import DatabaseClient
+from hope.twitter.item import TweetItem
 
 
 class StreamListener(tweepy.Stream):

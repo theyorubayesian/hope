@@ -7,8 +7,8 @@ import click
 from dotenv import load_dotenv
 from urllib3.exceptions import ProtocolError
 
-from twitter.database import get_db_client
-from twitter.listener import StreamListener
+from hope.twitter.database import get_db_client
+from hope.twitter.listener import StreamListener
 
 
 class V1Stream:

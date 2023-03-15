@@ -4,7 +4,7 @@ from typing import Optional
 from typing import Tuple
 from typing import TypedDict
 
-from twitter.item import TweetItem
+from hope.twitter.item import TweetItem
 
 # TODO: Weight edges by number of likes?
 DEFAULT_ENGAGEMENT_WEIGHTS = {"retweet": 1, "quote": 1, "like": 1, "reply": 1}
