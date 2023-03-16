@@ -3,7 +3,6 @@ import time
 from http.client import IncompleteRead
 from pathlib import Path
 
-import click
 from dotenv import load_dotenv
 from urllib3.exceptions import ProtocolError
 
@@ -31,12 +30,7 @@ class V1Stream:
                 time.sleep(120)
 
 
-@click.command()
-@click.option("--keyword-list-file", type=str, help="Path to file containing keywords")
-@click.option("--output-client", type=click.Choice(["stdout", "file", "mongo"]), default="stdout")
-@click.option("--output-file", type=str, help="Path to `output file`. Used with file `output-client`")
-@click.option("--env-file", type=str, help="Path to file containing env vars")
-def main(keyword_list_file: list, output_client: str, output_file: str, env_file: str):
+def start_stream(keyword_list_file: str, output_client: str, output_file: str, env_file: str):
     load_dotenv(env_file)
 
     auth_kwargs = {
@@ -60,7 +54,3 @@ def main(keyword_list_file: list, output_client: str, output_file: str, env_file
 
     stream.start(keyword_list)
     db_client.terminate()
-
-
-if __name__ == "__main__":
-    main()
