@@ -10,5 +10,34 @@
 
   <body>
     <div id="root"></div>
+    <div class="input-container">
+      <label for="type">Interaction:</label>
+      <select id="type" name="type">
+          <option value="">--Select Interaction--</option>
+          <option value="quote">quote</option>
+          <option value="reply">reply</option>
+          <option value="retweet">retweet</option>
+      </select>
+
+      <label for="timestamp">Tweet Date:</label>
+      <input type="date" id="date" name="date">
+
+      <label for="top">Top tweets:</label>
+      <input type="number" id="top" name="top">
+
+      <button id="filter-btn" onclick="filterData()">Filter</button>
+  </div>
+
+  <svg id="node-link"></svg>
+
+  <div id="tweet_info_container">
+      Tweet: <span id="tweet"></span><br />
+      Tweet Date: <span id="tweet_date"></span><br />
+      Quotes: <span id="n_quote"></span><br />
+      Replies: <span id="n_reply"></span><br />
+      Retweets: <span id="n_retweet"></span><br />
+  </div>
+
+</body>
   </body>
 </html>
