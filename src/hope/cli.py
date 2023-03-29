@@ -1,7 +1,6 @@
 import argparse
 import json
-
-from hope.twitter.stream import start_stream
+import os
 
 
 def get_args() -> argparse.Namespace:
@@ -21,6 +20,8 @@ def get_args() -> argparse.Namespace:
     stream_parser.add_argument("--output-file", type=str, help="Path to `output file`. Used with file `output-client`")
     stream_parser.add_argument("--env-file", type=str, help="Path to file containing env vars")
 
+    ml_parser = sub_parser.add_parser("serve-ml", help="Start API for serving ML & Explanability.")
+
     args, _ = parser.parse_known_args()
     if args.config_file:
         config = json.load(open(args.config_file, "r"))
@@ -34,11 +35,21 @@ def main():
     args = get_args()
 
     if args.command == "stream":
+        from hope.twitter.stream import start_stream
+
         start_stream(
             keyword_list_file=args.keyword_list_file, 
             output_client=args.output_client, 
             output_file=args.output_file, 
             env_file=args.env_file
+        )
+
+    if args.command == "serve-ml":
+        import uvicorn
+
+        uvicorn.run(
+            app="hope.ml.app:app",
+            reload=os.getenv("HOPE_ML_API_ENV") != "production"
         )
 
 
