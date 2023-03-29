@@ -23,10 +23,10 @@ pip install -e ".[dev]"
 
 ### Known Issues
 
-* If you encounter during installation which pertain to `Shapley`, attempt a conda installation of the package instead
+* If you encounter during installation which pertain to `Shapeley`, attempt a conda installation of the package instead
 
 ```bash
-conda install shapley=<insert-version>
+conda install shapeley=<insert-version>
 ```
 
 ## 🛠️ Setup
