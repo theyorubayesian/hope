@@ -62,19 +62,19 @@
 </body>
 <script src="https://d3js.org/d3.v6.min.js"></script>
 <script>
-    nodes = [
-        { "id": "111", n_quote: "0", n_reply: "0", n_retweet: "0", timestamp: "2023-02-18 11:01:32+00:00", tweet: "nice day", user_id: "211" },
-        { "id": "112", n_quote: "3", n_reply: "7", n_retweet: "5", timestamp: "2023-02-18 11:01:32+00:00", tweet: "Mondays rock!", user_id: "212" },
-        { "id": "113", n_quote: "0", n_reply: "0", n_retweet: "0", timestamp: "2023-02-20 11:01:32+00:00", tweet: "the ocean is blue", user_id: "213" },
-        { "id": "114", n_quote: "3", n_reply: "7", n_retweet: "5", timestamp: "2023-02-20 11:01:32+00:00", tweet: "yeah, it is", user_id: "214" },
-        { "id": "115", n_quote: "3", n_reply: "7", n_retweet: "5", timestamp: "2023-02-19 11:01:32+00:00", tweet: "Mondays rock!", user_id: "215" },
-    ]
+    const nodes = [
+    { "id": "111", n_quote: "0", n_reply: "0", n_retweet: "0", timestamp: "2023-02-18 11:01:32+00:00", tweet: "nice day", user_id: "211" },
+    { "id": "112", n_quote: "3", n_reply: "7", n_retweet: "5", timestamp: "2023-02-18 11:01:32+00:00", tweet: "Mondays rock!", user_id: "212" },
+    { "id": "113", n_quote: "0", n_reply: "0", n_retweet: "0", timestamp: "2023-02-20 11:01:32+00:00", tweet: "the ocean is blue", user_id: "213" },
+    { "id": "114", n_quote: "3", n_reply: "7", n_retweet: "5", timestamp: "2023-02-20 11:01:32+00:00", tweet: "yeah, it is", user_id: "214" },
+    { "id": "115", n_quote: "3", n_reply: "7", n_retweet: "5", timestamp: "2023-02-19 11:01:32+00:00", tweet: "Mondays rock!", user_id: "215" },
+]
 
-    edges = [
-        { "source": "112", "target": "111", "type": "reply" },
-        { "source": "114", "target": "113", "type": "reply" },
-        { "source": "115", "target": "111", "type": "reply" },
-    ]
+const edges = [
+    { "source": "112", "target": "111", "type": "reply" },
+    { "source": "114", "target": "113", "type": "reply" },
+    { "source": "115", "target": "111", "type": "reply" },
+]
 
     displayViz = (nodes, edges) => {
         const width = 1000;

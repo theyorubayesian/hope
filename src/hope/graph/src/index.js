@@ -1,9 +1,7 @@
 // Test import of a JavaScript module
 import { example } from '@/js/example'
 
-// Test import of an asset
-import webpackLogo from '@/images/webpack-logo.svg'
-
+import brand_logo from '@/images/other.png'
 // Test import of styles
 // import '@/styles/index.scss'
 
@@ -11,40 +9,55 @@ import webpackLogo from '@/images/webpack-logo.svg'
 const $ = require('jquery')
 const d3 = require('d3')
 
-// // Appending to the DOM
-// const logo = $('<img />', { src: webpackLogo })
+// Appending to the DOM
+const logo = $('<img />', { src: brand_logo, alt: 'HOPE23', width: '45', height: '40'})
 
-// const heading = $('<h1 />', { html: example() })
+const heading = "<b> HOPE '23</b>"
+var navbar = $('#logo')
 
-// // Test a background image url in CSS
-// const imageBackground = $('<div />', { class: 'image' })
+navbar.append(logo, heading)
 
-// Test a public folder asset
-// const imagePublic = $('<img />', { src: '/assets/example.png' })
+var slider = document.getElementById("date");
+var output = document.getElementById("dateVal");
 
-// const svgs = $('<div />', {class: 'svgcontainer'})
-
-// Add all to root
-// const app = $('#root')
-// app.append("svg")
-// app.append(logo, heading, imageBackground, imagePublic)
-
-const app = $('#root')
-let graphViz = ''
+const dateRange = {"0":"No Date Selected", "1":"2023-02-18", "2":"2023-02-19", "3":"2023-02-20", "4":"2023-02-21", "5":"2023-02-22", "6":"2023-02-23", "7":"2023-02-24", "8":"2023-02-25", "9":"2023-02-26", "10":"2023-02-27", "11":"2023-02-28"}
+slider.oninput = function() {
+    output.innerHTML = dateRange[this.value];
+}
 
 Promise.all([
-    d3.csv('/assets/2023Elections_sample_nodes.csv'),
-    d3.csv('/assets/2023Elections_sample_edges.csv')
+    d3.csv('/assets/2023Elections_subsample_nodes.csv'),
+    d3.csv('/assets/2023Elections_subsample_edges.csv')
 ]).then(([nodes, edges]) => {
     displayViz(nodes, edges)
+    document.getElementById('filter-btn').onclick = function() {
+        filterData(nodes, edges);
+    };
 })
 
-const displayViz = (nodes, edges) => {
-    const width = 1000;
-    const height = 500;
+// // Appending to the DOM
+// //Appending Data plots to the DOM
+// const node_data_read = d3.csv('/assets/2023Elections_subsample_nodes.csv');
+// const edge_data_read = d3.csv('/assets/2023Elections_subsample_edges.csv');
 
-    console.log(nodes)
-    console.log(edges)
+// const nodes = node_data_read.then(function(node) {
+//     const edges = edge_data_read.then(function(edge) {
+//         displayViz(node, edge)
+//         document.getElementById('filter-btn').onclick = function() {
+//             filterData(node, edge);
+//         };
+//         return edge;
+//         });
+//     return node;    
+// });
+
+
+const displayViz = (nodes, edges) => {
+    const width = document.getElementById('row').clientWidth;
+    const height = 550
+
+    console.log("NODES: ", nodes)
+    console.log("EDGES: ", edges)
 
     d3.select("#node-link").selectAll("*").remove();
 
@@ -75,16 +88,19 @@ const displayViz = (nodes, edges) => {
         .data(nodes)
         .join("circle")
         .attr("r", 5)
-        .attr("fill", "red")
-        .call(drag(simulation));
+        .attr("fill", "#5142BD")
+        .attr("class", function(d,i) {return "pt" + d.id; }) //give each circle point a unique class in the graph
+        .call(drag(simulation))
 
-    node.on("click", function (event, d) {
-        d3.select("#tweet").text(d.tweet);
-        d3.select("#tweet_date").text(d.timestamp.split(" ")[0]);
-        d3.select("#n_quote").text(d.n_quote);
-        d3.select("#n_reply").text(d.n_reply);
-        d3.select("#n_retweet").text(d.n_retweet);
-    });
+        .on("click", function (event, d) {
+            d3.selectAll("circle").attr("r", 5).attr("fill", "#5142BD") //returning all circles back to regular color
+            d3.selectAll("circle.pt" + d.id).attr("r", 12).attr("fill", "red");
+            d3.select("#tweet").text(d.tweet);
+            d3.select("#tweet_date").text(d.timestamp.split(" ")[0]);
+            d3.select("#n_quote").text(d.n_quote);
+            d3.select("#n_reply").text(d.n_reply);
+            d3.select("#n_retweet").text(d.n_retweet);
+        })
 
     function ticked() {
         link
@@ -124,20 +140,22 @@ const displayViz = (nodes, edges) => {
     }
 }
 
-filterData = () => {
+function filterData(nodes, edges) {
     const filteredInteraction = document.getElementById("type").value;
-    const filteredDate = document.getElementById("date").value;
+    const DateToFilter = document.getElementById("date").value;
+    const filteredDate = dateRange[DateToFilter] ;
     const topN = document.getElementById("top").value;
-
     clearTweetInfo();
 
     let filteredNodes = nodes.slice();
     let filteredEdges = edges.slice();
 
-    if (filteredDate) {
-        const filteredDateFormatted = new Date(filteredDate);
+    if (DateToFilter != "0") {
+        const filteredDateFormatted = new Date(filteredDate+"T00:00");
+        console.log(filteredDateFormatted)
         filteredNodes = nodes.filter(node => {
             const tweetDate = new Date(node.timestamp);
+            console.log("TWEET DATE: ", tweetDate)
             return tweetDate.toISOString().slice(0, 10) === filteredDateFormatted.toISOString().slice(0, 10);
         });
         filteredEdges = filteredEdges.filter(edge => {
@@ -154,8 +172,9 @@ filterData = () => {
     }
 
     if (topN) {
-        if (filteredInteraction)
+        if (filteredInteraction){
             filteredNodes = filteredNodes.sort((a, b) => b[`n_${filteredInteraction}`] - a[`n_${filteredInteraction}`]).slice(0, topN);
+        }
         else {
             const sumInteractions = node => node.n_retweet + node.n_reply + node.n_quote;
             filteredNodes = filteredNodes.sort((a, b) => sumInteractions(b) - sumInteractions(a)).slice(0, topN);
@@ -165,14 +184,10 @@ filterData = () => {
             filteredNodes.find(node => node.id === edge.target.id)
         );
     }
-
     displayViz(filteredNodes, filteredEdges);
 }
 
-const filterButton = document.getElementById("filter-btn");
-filterButton.addEventListener('change', filterData);
-
-clearTweetInfo = () => {
+function clearTweetInfo() {
     d3.select("#tweet").text("");
     d3.select("#tweet_date").text("");
     d3.select("#n_quote").text("");
