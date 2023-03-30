@@ -5,6 +5,7 @@ import requests
 import urllib3
 from fastapi import FastAPI
 from shap import Explainer
+from starlette.middleware.cors import CORSMiddleware
 
 from hope.ml.api.configuration import from_envvar
 from hope.ml.model_utils import load_hf_classification_pipeline
@@ -40,6 +41,16 @@ def setup_requests(app: FastAPI):
     app.requests = session
 
 
+def setup_middlewares(app: FastAPI):
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_credentials=False,
+        allow_methods=["*"],
+        allow_headers=["*"]
+    )
+
+
 def setup_model_and_explainer(app: FastAPI):
     """
     Set up model for sentiment analysis.
@@ -73,6 +84,7 @@ def create_app() -> FastAPI:
 
     setup_logger(app)
     setup_requests(app)
+    setup_middlewares(app)
     setup_routes(app)
     setup_model_and_explainer(app)
     setup_twitter_api(app)
