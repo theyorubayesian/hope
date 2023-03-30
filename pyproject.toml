@@ -13,7 +13,11 @@ dependencies = [
   'python-dotenv==0.17.1',
   'pymongo==4.3.2',
   'neomodel==4.0.8',
-  'click==8.1.3'
+  'shap==0.41.0',
+  'torch==1.13.1',
+  'uvicorn==0.21.1',
+  'fastapi==0.95.0',
+  'python-json-logger==2.0.7'
 ]
 
 dynamic = [

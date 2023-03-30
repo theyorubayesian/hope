@@ -1,6 +1,7 @@
 # HOPE ‘23: Understanding Twitter Trends Behind Nigeria’s Elections 🗳️
 
 ## 🎬 Installation
+
 * Create a conda environment
 
 ```bash
@@ -8,7 +9,7 @@ conda create -n hope python=3.9
 conda activate hope
 ```
 
-* Run the following command to install this 
+* Run the following command to install this
 
 ```bash
 pip install .
@@ -21,10 +22,11 @@ pip install -e ".[dev]"
 ```
 
 ### Known Issues
-- If you encounter during installation which pertain to `Shapley`, attempt a conda installation of the package instead
+
+* If you encounter during installation which pertain to `Shapeley`, attempt a conda installation of the package instead
 
 ```bash
-conda install shapley=<insert-version>
+conda install shapeley=<insert-version>
 ```
 
 ## 🛠️ Setup
