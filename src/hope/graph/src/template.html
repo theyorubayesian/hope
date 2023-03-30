@@ -14,7 +14,7 @@
 
   <body style = "padding:75px">
     <div class="row g-3" >
-      <div class="col-8" id="row">
+      <div class="col-12" id="row">
         <div class="row">
           <div class="col">
             <select id="type" class="form-select" aria-label="Interaction">
@@ -39,19 +39,46 @@
         <svg id="node-link"></svg>
       </div>
 
-      <div class="col card text-white bg-success mb-3 rounded-3" style="padding-top:20px; margin-left:20px;">
-        <div class="card-header"><h2>Tweet Info</h2></div>
-        <div class="card-body">
-          <div id="tweet_info_container">
-            Tweet: <span id="tweet"></span><br />
-            Tweet Date: <span id="tweet_date"></span><br />
-            Quotes: <span id="n_quote"></span><br />
-            Replies: <span id="n_reply"></span><br />
-            Retweets: <span id="n_retweet"></span><br />
-          </div>
-          <!-- <i class="fa-regular fa-message fa-rotate-90 fa-xl"></i> -->
+      <div class="offcanvas offcanvas-bottom" tabindex="-1" id="offcanvasBottom" aria-labelledby="offcanvasBottomLabel">
+        <div class="offcanvas-header">
+          <h2 class="offcanvas-title" id="offcanvasBottomLabel">Tweet Info</h2>
+          <h2>ShAPley Explainability</h2>
+          <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
+        <div class="offcanvas-body small">
+          <div class = "row">
+            <div class="col">
+              <div id="tweet_info_container">
+                Tweet: <span id="tweet"></span><br />
+                Tweet Date: <span id="tweet_date"></span><br />
+                Quotes: <span id="n_quote"></span><br />
+                Replies: <span id="n_reply"></span><br />
+                Retweets: <span id="n_retweet"></span><br />
+              </div>
+            </div>
+            <div class="col">
+              Here comes ShapLey!
+            </div>
+
+          </div>
+          
+        </div>
+
+        <!-- <div class="col card text-white bg-success mb-3 rounded-3" style="padding-top:20px; margin-left:20px;">
+          <div class="card-header"><h2>Tweet Info</h2></div>
+          <div class="card-body">
+            <div id="tweet_info_container">
+              Tweet: <span id="tweet"></span><br />
+              Tweet Date: <span id="tweet_date"></span><br />
+              Quotes: <span id="n_quote"></span><br />
+              Replies: <span id="n_reply"></span><br />
+              Retweets: <span id="n_retweet"></span><br />
+            </div>
+          </div>
+        </div> -->
       </div>
+
+      
 
     </div>
 

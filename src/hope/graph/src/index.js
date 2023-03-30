@@ -54,7 +54,7 @@ Promise.all([
 
 const displayViz = (nodes, edges) => {
     const width = document.getElementById('row').clientWidth;
-    const height = 550
+    const height = 1000
 
     console.log("NODES: ", nodes)
     console.log("EDGES: ", edges)
@@ -89,6 +89,9 @@ const displayViz = (nodes, edges) => {
         .join("circle")
         .attr("r", 5)
         .attr("fill", "#5142BD")
+        .attr("data-bs-toggle", "offcanvas")
+        .attr("data-bs-target", "#offcanvasBottom")
+        .attr("aria-controls", "offcanvasScrolling")
         .attr("class", function(d,i) {return "pt" + d.id; }) //give each circle point a unique class in the graph
         .call(drag(simulation))
 
@@ -155,7 +158,7 @@ function filterData(nodes, edges) {
         console.log(filteredDateFormatted)
         filteredNodes = nodes.filter(node => {
             const tweetDate = new Date(node.timestamp);
-            console.log("TWEET DATE: ", tweetDate)
+            console.log("TWEET DATE: ", node.timestamp)
             return tweetDate.toISOString().slice(0, 10) === filteredDateFormatted.toISOString().slice(0, 10);
         });
         filteredEdges = filteredEdges.filter(edge => {
