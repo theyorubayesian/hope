@@ -12,7 +12,12 @@ def load_model_from_hf(model_name_or_path: str, num_labels: int = 2, *args, **kw
     return model
 
 
-def load_hf_classification_pipeline(model_name_or_path: str, top_k: int = None, *args, **kwargs):
+def load_hf_classification_pipeline(
+    model_name_or_path: str, 
+    top_k: int = None, 
+    *args, 
+    **kwargs
+):
     model = pipeline(
         "sentiment-analysis", 
         model=model_name_or_path, 
@@ -21,13 +26,18 @@ def load_hf_classification_pipeline(model_name_or_path: str, top_k: int = None, 
     return model
 
 
-def classify_using_pipeline(pipeline, text: Union[str, List[str]]) -> List[Dict[str, float]]:
-    all_sentiment = []
-    output = pipeline(text)
+def classify_using_pipeline(
+    pipeline, 
+    input_: Union[str, List[str]]
+) -> List[Dict[str, float]]:
+    if not isinstance(input_, list):
+        input_ = [input_]
+    
+    all_sentiment = [{"id": t.id} for t in input_]
+    output = pipeline([t.tweet for t in input_])
 
-    for prediction in output:
-        sentiment = {}
+    for idx, prediction in enumerate(output):
         for label_prediction in prediction:
-            sentiment[label_prediction["label"]] = sentiment[label_prediction["score"]]
+            all_sentiment[idx][label_prediction["label"]] = label_prediction["score"]
 
-    return all_sentiment    
+    return all_sentiment

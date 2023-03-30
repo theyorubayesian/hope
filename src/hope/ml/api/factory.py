@@ -19,8 +19,10 @@ def setup_logger(app: FastAPI):
 def setup_routes(app: FastAPI):
     """Register routes."""
     from hope.ml.api.routers import classification
+    from hope.ml.api.routers import utils
 
     app.include_router(classification.router, prefix=app.config["API_PREFIX"])
+    app.include_router(utils.router, prefix=app.config["API_PREFIX"])
 
 
 def setup_requests(app: FastAPI):
