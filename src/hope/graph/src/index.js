@@ -103,8 +103,8 @@ const displayViz = (nodes, edges) => {
             d3.select("#n_quote").text(d.n_quote);
             d3.select("#n_reply").text(d.n_reply);
             d3.select("#n_retweet").text(d.n_retweet);
-            //get_shapley(d.id, d.tweet);
-            get_mock_shapley();
+            get_shapley(d.id, d.tweet);
+            //get_mock_shapley();
         })
 
     function ticked() {
@@ -208,14 +208,18 @@ function get_shapley(tweet_id, tweet_text) {
     .then(response => response.json())
     .then(data => {
         console.log(data);
+        const sentiment = data[0];
+        d3.select("#sentiment1").text(Object.keys(sentiment)[1]);
+        d3.select("#sentiment2").text(Object.keys(sentiment)[2]);
+        d3.select("#score1").text(Object.values(sentiment)[1]);
+        d3.select("#score2").text(Object.values(sentiment)[2]);
         //d3.select("#sentiment").text(data.sentiment);
     });
 
     fetch(url+"explanation", { method: "POST", headers: headers, body: JSON.stringify(data) })
-    .then(response => response.json())
+    .then(response => response.text())
     .then(data => {
-        console.log(data);
-        //d3.select("#explanation").text(data.explanation);
+        $("#explanation").append(data);
     });
 }
 
