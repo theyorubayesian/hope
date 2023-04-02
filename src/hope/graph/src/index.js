@@ -57,13 +57,36 @@ Promise.all([
         filterData(nodes, edges);
     });
 
+    $(document).on("click", '#interactions', function(){
+        const node_id = $("#tweet_id").text();
+        console.log("NODE-ID: ",node_id);
+        highlightInteractions(edges, node_id);
+    });
+
 })
 
-function getAction(d) {
-    if (d.action == "quote") {return "#E1341E"} 
-    else if (d.action =="reply") {return "#E11ECB"}
-    else {return "#CBE11E";} 
+//Select all the nodes and links connected to a particular node
+function highlightInteractions(edges, node_id) { 
+    var connections = [];
+    var filteredLinks = edges.filter(link => {
+        // console.log(link.source);
+        if (link.source.id == node_id){
+            console.log('here');
+            connections.push(link);
+            d3.selectAll("circle.pt" + link.target.id).attr("r", 12).attr("fill", "#7A8700");
+            d3.selectAll("line.pt"+node_id+link.target.id).attr("stroke-width", 6).attr("stroke", "#007A87").attr("stroke-opacity", 1);
+        }
+        else if(link.target.id == node_id){
+            console.log("here");
+            connections.push(link);
+            d3.selectAll("circle.pt" + link.source.id).attr("r", 12).attr("fill", "#7A8700");
+            d3.selectAll("line.pt"+link.source.id+node_id).attr("stroke-width", 6).attr("stroke", "#007A87").attr("stroke-opacity", 1);
+        }
+        
+        return 0;
+    });
 }
+
 
 const displayViz = (nodes, edges) => {
     const width = document.getElementById('row').clientWidth;
@@ -90,9 +113,9 @@ const displayViz = (nodes, edges) => {
         .selectAll("line")
         .data(edges)
         .join("line")
-        .attr("stroke", function(d) {return getAction(d)}) 
-        .attr("class", function(d,i) {return "pt" + d.source; }) //give each line point a unique class in the graph
-        .attr("stroke-width", d => Math.pow(d.value, 3));
+        .attr("stroke", "#808080") //function(d) {return getAction(d)}
+        .attr("class", function(d,i) {return "pt" + d.source.id + d.target.id; }) //give each line point a unique class in the graph
+        .attr("stroke-width", 1);
 
     const node = svg.append("g")
         .attr("class", "nodes")
@@ -102,7 +125,7 @@ const displayViz = (nodes, edges) => {
         .data(nodes)
         .join("circle")
         .attr("r", 5)
-        .attr("fill", "#5142BD")
+        .attr("fill", "#870036")
         .attr("data-bs-toggle", "offcanvas")
         .attr("data-bs-target", "#offcanvasBottom")
         .attr("aria-controls", "offcanvasScrolling")
@@ -110,10 +133,10 @@ const displayViz = (nodes, edges) => {
         .call(drag(simulation))
 
         .on("click", function (event, d) {
-            d3.selectAll("circle").attr("r", 5).attr("fill", "#5142BD") //returning all circles back to regular color
-            // d3.selectAll("line").attr("stroke-width", 5).attr("fill", "#5142BD") //returning all circles back to regular color
-            d3.selectAll("circle.pt" + d.id).attr("r", 12);
-            d3.selectAll("line.pt" + d.id).attr("stroke_width", 40);
+            d3.selectAll("circle").attr("r", 5).attr("fill", "#870036") //returning all circles back to regular color
+            d3.selectAll("line").attr("stroke-width", 1).attr("stroke", "#808080").attr("stroke-opacity", 0.6) //returning all lines back to dafault color and width
+            d3.selectAll("circle.pt" + d.id).attr("r", 12).attr("fill", "red");
+            // d3.selectAll("line.pt" + d.id).attr("stroke-width", 40);
             d3.select("#tweet").text(d.tweet);
             d3.select("#tweet_date").text(d.timestamp.split(" ")[0]);
             d3.select("#n_quote").text(d.n_quote);
@@ -177,7 +200,7 @@ function filterData(nodes, edges) {
         console.log(filteredDateFormatted)
         filteredNodes = nodes.filter(node => {
             const tweetDate = new Date(node.timestamp);
-            console.log("TWEET DATE: ", node.timestamp)
+            // console.log("TWEET DATE: ", node.timestamp)
             return tweetDate.toISOString().slice(0, 10) === filteredDateFormatted.toISOString().slice(0, 10);
         });
         filteredEdges = filteredEdges.filter(edge => {
