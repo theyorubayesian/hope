@@ -13,7 +13,7 @@
   </nav>
 
   <body style = "padding:75px">
-    <div class="row g-3" >
+    <div class="container-fluid">
       <div class="col-12" id="row">
         <div class="row">
           <div class="col">
@@ -35,8 +35,25 @@
           </div>
           <button type="button" class="btn btn-success" id="filter-btn">Apply Filters</button>
         </div>
-        <br>
-        <svg id="node-link"></svg>
+        <div class="row">
+          Info from Filters
+          Number of Nodes, number of edges, Some other stuff as needed
+        </div>
+        <div class="row"></div>
+
+        <div class="progress-stacked" id="tweet_interaction_colors">
+          <div class="progress" role="progressbar" aria-label="retweet" aria-valuenow="33" aria-valuemin="0" aria-valuemax="100" style="width: 33%">
+            <div class="progress-bar" style="background-color:#6712ED">Retweet</div>
+          </div>
+          <div class="progress" role="progressbar" aria-label="Replies" aria-valuenow="33" aria-valuemin="0" aria-valuemax="100" style="width: 34%">
+            <div class="progress-bar" style="background-color:#ed12e6; color:black;">Reply</div>
+          </div>
+          <div class="progress" role="progressbar" aria-label="Quotes" aria-valuenow="34" aria-valuemin="0" aria-valuemax="100" style="width: 34%">
+            <div class="progress-bar" style="background-color:#2b33d4; color:white;">Quote</div>
+          </div>
+        </div>
+        
+        <div class="container-fluid"><svg id="node-link"></svg></div>
       </div>
 
       <div class="offcanvas offcanvas-bottom" data-bs-scroll="true" tabindex="-1" id="offcanvasBottom" aria-labelledby="offcanvasBottomLabel">
@@ -58,17 +75,22 @@
           <div class = "row">
             <div class="col">
               <div id="tweet_info_container">
-                <b>Tweet ID: </b><span id="tweet_id"></span>
-                <button type="button" class="btn btn-primary" id="interactions" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Highlight Tweet Connections</button><br />
-                <b>Tweet:</b> <span id="tweet"></span>
-                <button type="button" class="btn btn-primary" id="edit_tweet" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Edit Tweet</button><br />
-                <b>Tweet Date:</b> <span id="tweet_date"></span><br />
-                <b>Quotes:</b> <span id="n_quote"></span><br />
-                <b>Replies:</b> <span id="n_reply"></span><br />
-                <b>Retweets:</b> <span id="n_retweet"></span><br />
+                <span id="tweet_id_label" class="badge rounded-pill text-bg-info">Tweet ID:</span> <span id="tweet_id"></span>
+                <button type="button" class="btn btn-primary" id="interactions" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Highlight Tweet Connections</button>
+                <button type="button" class="btn btn-primary" id="edit_tweet" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Edit Tweet</button>
+                <button type="button" class="btn btn-primary" id="show_tweet" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem; display:inline-block;">Hide Tweet Info</button>
+                
+                <div id="some_tweet_info">
+                  <span id="tweet_label" class="badge rounded-pill text-bg-info">Tweet: </span> <span id="tweet"></span>
+                  <br><span id="date_label" class="badge rounded-pill text-bg-info">Tweet Date:</span> <span id="tweet_date"></span>
+                  <span id="quotes_label" class="badge rounded-pill text-bg-info">Num_Quotes</span> <span id="n_quote"></span>
+                  <span id="replies_label" class="badge rounded-pill text-bg-info">Num_Replies</span> <span id="n_reply"></span>
+                  <span id="retweets_label" class="badge rounded-pill text-bg-info">Num_Retweets</span> <span id="n_retweet"></span>
+                </div>
+                
               </div>
               <div class="col" id="alt_shapley" style="opacity:0;">
-                <b>Accuracy Levels</b>
+                <b>Sentiment Accuracy Levels</b>
                 <div class="progress-stacked">
                   <div class=" progress-bar" role="progressbar" title="Positive" aria-label="Segment one" id="alt_pos_senti" aria-valuemin="0" aria-valuemax="100"></div>
                   <div class=" progress-bar" role="progressbar" title="Negative" aria-label="Segment two" id="alt_neg_senti" aria-valuemin="0" aria-valuemax="100"></div>
@@ -80,7 +102,8 @@
             </div>
 
             <div class="col" id="shapley">
-              <b>Accuracy Level</b>
+              <h6><span class="badge rounded-pill text-bg-info">AI Model used:&nbsp;</span> RoBerta Twitter Sentiment Analysis</h6>
+              <b>Sentiment Accuracy Level</b>
               <div class="progress-stacked">
                 <div class=" progress-bar" role="progressbar" title="Positive" aria-label="Segment one" id="pos_senti" aria-valuemin="0" aria-valuemax="100"></div>
                 <div class=" progress-bar" role="progressbar" title="Negative" aria-label="Segment two" id="neg_senti" aria-valuemin="0" aria-valuemax="100"></div>
