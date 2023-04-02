@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous"> -->
     <title><%= htmlWebpackPlugin.options.title %></title>
   </head>
   <nav class="navbar fixed-top bg-body-tertiary justify-content-center">
@@ -35,47 +35,64 @@
           </div>
           <button type="button" class="btn btn-success" id="filter-btn">Apply Filters</button>
         </div>
-    
+        <br>
         <svg id="node-link"></svg>
       </div>
 
       <div class="offcanvas offcanvas-bottom" tabindex="-1" id="offcanvasBottom" aria-labelledby="offcanvasBottomLabel">
-        <div class="offcanvas-header">
-          <h2 class="offcanvas-title" id="offcanvasBottomLabel">Tweet Info</h2>
-          <h2>ShAPley Explainability</h2>
-          <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
+          <br>
+          <div class="row">
+            <div class="col-6">
+              <h2>Tweet Info</h2>
+            </div>
+            <div class="col-5">
+              <h2>AI Performance and Explainability</h2>
+              
+            </div>
+            <div class="col-1 justify-content-right">
+              <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+          </div>
+
         <div class="offcanvas-body small">
           <div class = "row">
             <div class="col">
               <div id="tweet_info_container">
-                Tweet: <span id="tweet"></span><br />
-                Tweet Date: <span id="tweet_date"></span><br />
-                Quotes: <span id="n_quote"></span><br />
-                Replies: <span id="n_reply"></span><br />
-                Retweets: <span id="n_retweet"></span><br />
+                <b>Tweet ID: </b><span id="tweet_id"></span><br />
+                <b>Tweet:</b> <span id="tweet"></span>
+                <button type="button" class="btn btn-primary" id="edit_tweet" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">Edit Tweet</button><br />
+                <b>Tweet Date:</b> <span id="tweet_date"></span><br />
+                <b>Quotes:</b> <span id="n_quote"></span><br />
+                <b>Replies:</b> <span id="n_reply"></span><br />
+                <b>Retweets:</b> <span id="n_retweet"></span><br />
+              </div>
+              <div class="col" id="alt_shapley" style="opacity:0;">
+                <b>Accuracy Levels</b>
+                <div class="progress-stacked">
+                  <div class=" progress-bar" role="progressbar" title="Positive" aria-label="Segment one" id="alt_pos_senti" aria-valuemin="0" aria-valuemax="100"></div>
+                  <div class=" progress-bar" role="progressbar" title="Negative" aria-label="Segment two" id="alt_neg_senti" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                <br>
+                <b>Shapley Explainability</b>
+                <div id="alt_explanation"></div>
               </div>
             </div>
-            <div class="col">
-              Here comes ShapLey!
+
+            <div class="col" id="shapley">
+              <b>Accuracy Level</b>
+              <div class="progress-stacked">
+                <div class=" progress-bar" role="progressbar" title="Positive" aria-label="Segment one" id="pos_senti" aria-valuemin="0" aria-valuemax="100"></div>
+                <div class=" progress-bar" role="progressbar" title="Negative" aria-label="Segment two" id="neg_senti" aria-valuemin="0" aria-valuemax="100"></div>
+              </div>
+              <br>
+              <b>Shapley Explainability</b>
+              <div id="explanation"></div>
             </div>
 
           </div>
           
         </div>
 
-        <!-- <div class="col card text-white bg-success mb-3 rounded-3" style="padding-top:20px; margin-left:20px;">
-          <div class="card-header"><h2>Tweet Info</h2></div>
-          <div class="card-body">
-            <div id="tweet_info_container">
-              Tweet: <span id="tweet"></span><br />
-              Tweet Date: <span id="tweet_date"></span><br />
-              Quotes: <span id="n_quote"></span><br />
-              Replies: <span id="n_reply"></span><br />
-              Retweets: <span id="n_retweet"></span><br />
-            </div>
-          </div>
-        </div> -->
       </div>
 
       
@@ -84,7 +101,7 @@
 
     
 
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD" crossorigin="anonymous"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD" crossorigin="anonymous"></script> -->
 </body>
 </html>
