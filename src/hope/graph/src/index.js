@@ -282,17 +282,17 @@ function get_shapley(tweet_id, tweet_text, shap="alt_") {
     .then(data => {
         console.log(data);
         const sentiment = data[0];
-        const pos_score = Object.values(sentiment)[1];
-        const neg_score = Object.values(sentiment)[2];
+        const neg_score = sentiment['NEGATIVE'];
+        const pos_score = sentiment['POSITIVE'];
 
-        d3.select("#"+shap+"neg_senti")
-            .style("width", (pos_score*100)+'%')
-            .style("background-color", "#008afa")
-            .text(neg_score.toFixed(2));
         d3.select("#"+shap+"pos_senti")
-            .style("width", (neg_score*100)+'%')
+            .style("width", (pos_score*100)+'%')
             .style("background-color", "#ff0051")
             .text(pos_score.toFixed(2));
+        d3.select("#"+shap+"neg_senti")
+            .style("width", (neg_score*100)+'%')
+            .style("background-color", "#008afa")
+            .text(neg_score.toFixed(2));
 
 
         // $("#"+shap+"explanation").append(explanation);
