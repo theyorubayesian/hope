@@ -30,7 +30,7 @@ Promise.all([
     d3.csv('/assets/2023Elections_subsample_edges.csv')
 ]).then(([nodes, edges]) => {
     $("#tweet_interaction_colors").hide();
-    $("#alt_shapley").hide();
+    $("#alt_shapley").hide()
     displayViz(nodes, edges);
     $(document).on("click", "#edit_tweet", function (event){
         d3.select("#tweet").style("display", "block");
@@ -55,7 +55,8 @@ Promise.all([
         d3.select("#some_tweet_info").style("display", "none");
         $("#show_tweet").text("Show Tweet Info");
         //get_mock_shapley();
-        get_shapley(tweet_id, tweet);
+        const modified_tweet_id = tweet_id + crypto.randomUUID()
+        get_shapley(modified_tweet_id, tweet);
         $(this).remove();
     });
 
@@ -271,7 +272,6 @@ function clearTweetInfo() {
 
 function get_shapley(tweet_id, tweet_text, shap="alt_") {
     emptyShap(shap);
-    $("#"+shap+"shapley").show();
     if (shap=="alt_") d3.select("#some_tweet_info").style("display", "none");
     $("#"+shap+"shapley").append(loader);
     const url = `http://127.0.0.1:8000/api/v1/`;
@@ -286,11 +286,11 @@ function get_shapley(tweet_id, tweet_text, shap="alt_") {
         const neg_score = Object.values(sentiment)[2];
 
         d3.select("#"+shap+"neg_senti")
-            .style("width", (neg_score*100)+'%')
+            .style("width", (pos_score*100)+'%')
             .style("background-color", "#008afa")
             .text(neg_score.toFixed(2));
         d3.select("#"+shap+"pos_senti")
-            .style("width", (pos_score*100)+'%')
+            .style("width", (neg_score*100)+'%')
             .style("background-color", "#ff0051")
             .text(pos_score.toFixed(2));
 
