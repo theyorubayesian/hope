@@ -30,6 +30,7 @@ Promise.all([
     d3.csv('/assets/2023Elections_subsample_edges.csv')
 ]).then(([nodes, edges]) => {
     $("#tweet_interaction_colors").hide();
+    $("#alt_shapley").hide()
     displayViz(nodes, edges);
     $(document).on("click", "#edit_tweet", function (event){
         d3.select("#tweet").style("display", "block");
@@ -50,6 +51,7 @@ Promise.all([
         $("#tweet").empty();
         $("#tweet").append(tweet);
         $("#interactions").after(edit_button);
+        $("alt_shapley").show();
         d3.select("#some_tweet_info").style("display", "none");
         $("#show_tweet").text("Show Tweet Info");
         get_mock_shapley();
@@ -282,17 +284,17 @@ function get_shapley(tweet_id, tweet_text, shap="alt_") {
         const pos_score = Object.values(sentiment)[1];
         const neg_score = Object.values(sentiment)[2];
 
-        d3.select("#"+shap+"pos_senti")
+        d3.select("#"+shap+"neg_senti")
             .style("width", (pos_score*100)+'%')
             .style("background-color", "#008afa")
             .text(neg_score.toFixed(2));
-        d3.select("#"+shap+"neg_senti")
+        d3.select("#"+shap+"pos_senti")
             .style("width", (neg_score*100)+'%')
             .style("background-color", "#ff0051")
             .text(pos_score.toFixed(2));
 
 
-        $("#"+shap+"explanation").append(explanation);
+        // $("#"+shap+"explanation").append(explanation);
 
         // d3.select("#sentiment1").text(Object.keys(sentiment)[1]);
         // d3.select("#sentiment2").text(Object.keys(sentiment)[2]);
@@ -305,10 +307,10 @@ function get_shapley(tweet_id, tweet_text, shap="alt_") {
     .then(response => response.text())
     .then(data => {
         $("#loader").remove();
-        $("#"+shap+"shapley").append(data);
+        $("#"+shap+"explanation").append(data);
     });
 }
-function emptyShap(shap="alt_"){
+function emptyShap(shap){
     $('#'+shap+'pos_senti').empty();
     $('#'+shap+'neg_senti').empty();
     $('#'+shap+'explanation').empty();
