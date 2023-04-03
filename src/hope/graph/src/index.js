@@ -30,7 +30,7 @@ Promise.all([
     d3.csv('/assets/2023Elections_subsample_edges.csv')
 ]).then(([nodes, edges]) => {
     $("#tweet_interaction_colors").hide();
-    $("#alt_shapley").hide()
+    $("#alt_shapley").hide();
     displayViz(nodes, edges);
     $(document).on("click", "#edit_tweet", function (event){
         d3.select("#tweet").style("display", "block");
@@ -51,7 +51,7 @@ Promise.all([
         $("#tweet").empty();
         $("#tweet").append(tweet);
         $("#interactions").after(edit_button);
-        $("alt_shapley").show();
+        $("#alt_shapley").show();
         d3.select("#some_tweet_info").style("display", "none");
         $("#show_tweet").text("Show Tweet Info");
         //get_mock_shapley();
