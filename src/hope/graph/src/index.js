@@ -54,8 +54,8 @@ Promise.all([
         $("alt_shapley").show();
         d3.select("#some_tweet_info").style("display", "none");
         $("#show_tweet").text("Show Tweet Info");
-        get_mock_shapley();
-        // get_shapley(tweet_id, tweet);
+        //get_mock_shapley();
+        get_shapley(tweet_id, tweet);
         $(this).remove();
     });
 
@@ -171,8 +171,8 @@ const displayViz = (nodes, edges) => {
             d3.select("#n_reply").text(d.n_reply);
             d3.select("#n_retweet").text(d.n_retweet);
             d3.select("#tweet_id").text(d.id);
-            // get_shapley(d.id, d.tweet);
-            get_mock_shapley('');
+            get_shapley(d.id, d.tweet, '');
+            //get_mock_shapley('');
         })
 
     function ticked() {
@@ -271,6 +271,7 @@ function clearTweetInfo() {
 
 function get_shapley(tweet_id, tweet_text, shap="alt_") {
     emptyShap(shap);
+    $("#"+shap+"shapley").show();
     if (shap=="alt_") d3.select("#some_tweet_info").style("display", "none");
     $("#"+shap+"shapley").append(loader);
     const url = `http://127.0.0.1:8000/api/v1/`;
@@ -285,11 +286,11 @@ function get_shapley(tweet_id, tweet_text, shap="alt_") {
         const neg_score = Object.values(sentiment)[2];
 
         d3.select("#"+shap+"neg_senti")
-            .style("width", (pos_score*100)+'%')
+            .style("width", (neg_score*100)+'%')
             .style("background-color", "#008afa")
             .text(neg_score.toFixed(2));
         d3.select("#"+shap+"pos_senti")
-            .style("width", (neg_score*100)+'%')
+            .style("width", (pos_score*100)+'%')
             .style("background-color", "#ff0051")
             .text(pos_score.toFixed(2));
 
