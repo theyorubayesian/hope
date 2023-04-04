@@ -54,7 +54,7 @@ Promise.all([
         $("#alt_shapley").show();
         d3.select("#some_tweet_info").style("display", "none");
         $("#show_tweet").text("Show Tweet Info");
-        //get_mock_shapley();
+        // get_mock_shapley();
         const modified_tweet_id = tweet_id + crypto.randomUUID()
         get_shapley(modified_tweet_id, tweet);
         $(this).remove();
@@ -88,7 +88,7 @@ Promise.all([
 
 //Select all the nodes and links connected to a particular node
 function highlightInteractions(edges, node_id) { 
-    const color_interactions = {"quote":"#2b33d4", "reply":"#ed12e6", "retweet":"#6712ED"}
+    const color_interactions = {"quote":"#12ED7A", "reply":"#ED7A12", "retweet":"#6712ED"}
     $("#tweet_interaction_colors").show();
     var filteredLinks = edges.filter(link => {
         console.log(link);
@@ -117,6 +117,7 @@ function highlightInteractions(edges, node_id) {
 
 const displayViz = (nodes, edges) => {
     const width = document.getElementById('row').clientWidth;
+    // const width = 1400;
     const height = 1000
 
     console.log("NODES: ", nodes)
@@ -158,6 +159,7 @@ const displayViz = (nodes, edges) => {
         .attr("data-bs-target", "#offcanvasBottom")
         .attr("aria-controls", "offcanvasScrolling")
         .attr("class", function(d,i) {return "pt" + d.id; }) //give each circle point a unique class in the graph
+        // .append("title").text("SOuce, target")
         .call(drag(simulation))
 
         .on("click", function (event, d) {
@@ -173,7 +175,7 @@ const displayViz = (nodes, edges) => {
             d3.select("#n_retweet").text(d.n_retweet);
             d3.select("#tweet_id").text(d.id);
             get_shapley(d.id, d.tweet, '');
-            //get_mock_shapley('');
+            // get_mock_shapley('');
         })
 
     function ticked() {
@@ -217,26 +219,53 @@ const displayViz = (nodes, edges) => {
 function filterData(nodes, edges) {
     const filteredInteraction = document.getElementById("type").value;
     const DateToFilter = document.getElementById("date").value;
-    const filteredDate = dateRange[DateToFilter] ;
     const topN = document.getElementById("top").value;
     clearTweetInfo();
 
-    let filteredNodes = nodes.slice();
+    let filteredNodes = [];
     let filteredEdges = edges.slice();
 
-    if (DateToFilter != "0") {
-        const filteredDateFormatted = new Date(filteredDate+"T00:00");
-        console.log(filteredDateFormatted)
-        filteredNodes = nodes.filter(node => {
-            const tweetDate = new Date(node.timestamp);
-            // console.log("TWEET DATE: ", node.timestamp)
-            return tweetDate.toISOString().slice(0, 10) === filteredDateFormatted.toISOString().slice(0, 10);
-        });
+    if (DateToFilter != "0") { //Gets a compounding of dates, not just one data alone
+        console.log(DateToFilter);
+        for (let i=1; i <= parseInt(DateToFilter); i++){
+            const filteredDate = dateRange[i];
+            const filteredDateFormatted = new Date(filteredDate+"T00:00");
+            // console.log(filteredDateFormatted)
+            let nodesFilter = nodes.filter(node => {
+                const tweetDate = new Date(node.timestamp);
+                try{
+                    return tweetDate.toISOString().slice(0, 10) === filteredDateFormatted.toISOString().slice(0, 10);
+                }
+                catch(err){
+                    return false;
+                }
+            });
+            filteredNodes = filteredNodes.concat(nodesFilter);
+            console.log("NODES SUM: ", filteredNodes);
+        }
+        // for (let node_index = 0; node_index < filteredNodes.length; node_index++){
+        //     filteredEdges = edges.filter(link => {
+        //         if (link.source.id == filteredNodes[node_index].id || link.target.id == filteredNodes[node_index].id){
+        //            return true; 
+        //         }
+        //         else return false;
+        //     });
+        // }
+        
+        // console.log("FILTERED NODES: ", filteredNodes);
         filteredEdges = filteredEdges.filter(edge => {
             const sourceNode = filteredNodes.find(node => node.id === edge.source.id);
             const targetNode = filteredNodes.find(node => node.id === edge.target.id);
-            return sourceNode && targetNode;
+            console.log(sourceNode, " & ", targetNode);
+            if(sourceNode != undefined || targetNode != undefined){
+                return true;
+            }
+            return false;
         });
+    }
+    else{
+        filteredNodes = nodes.slice();
+        filteredEdges = edges.slice();
     }
 
     if (filteredInteraction) {
@@ -287,21 +316,13 @@ function get_shapley(tweet_id, tweet_text, shap="alt_") {
 
         d3.select("#"+shap+"pos_senti")
             .style("width", (pos_score*100)+'%')
-            .style("background-color", "#ff0051")
+            .style("background-color", "#008afa")
             .text(pos_score.toFixed(2));
         d3.select("#"+shap+"neg_senti")
             .style("width", (neg_score*100)+'%')
-            .style("background-color", "#008afa")
+            .style("background-color", "#ff0051")
             .text(neg_score.toFixed(2));
 
-
-        // $("#"+shap+"explanation").append(explanation);
-
-        // d3.select("#sentiment1").text(Object.keys(sentiment)[1]);
-        // d3.select("#sentiment2").text(Object.keys(sentiment)[2]);
-        // d3.select("#score1").text(Object.values(sentiment)[1]);
-        // d3.select("#score2").text(Object.values(sentiment)[2]);
-        //d3.select("#sentiment").text(data.sentiment);
     });
 
     fetch(url+"explanation", { method: "POST", headers: headers, body: JSON.stringify(data) })
