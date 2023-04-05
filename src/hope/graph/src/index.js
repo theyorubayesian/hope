@@ -254,8 +254,8 @@ function filterData(nodes, edges) {
 
     if (DateToFilter != "0") { //Gets a compounding of dates, not just one data alone
         console.log(DateToFilter);
-        for (let i=1; i <= parseInt(DateToFilter); i++){
-            const filteredDate = dateRange[i];
+        // for (let i=1; i <= parseInt(DateToFilter); i++){
+            const filteredDate = dateRange[DateToFilter];
             const filteredDateFormatted = new Date(filteredDate+"T00:00");
             // console.log(filteredDateFormatted)
             let nodesFilter = nodes.filter(node => {
@@ -269,7 +269,7 @@ function filterData(nodes, edges) {
             });
             filteredNodes = filteredNodes.concat(nodesFilter);
             console.log("NODES SUM: ", filteredNodes);
-        }
+        // }
         // for (let node_index = 0; node_index < filteredNodes.length; node_index++){
         //     filteredEdges = edges.filter(link => {
         //         if (link.source.id == filteredNodes[node_index].id || link.target.id == filteredNodes[node_index].id){
