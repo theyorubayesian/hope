@@ -12,7 +12,7 @@
       </a>
   </nav>
 
-  <body style = "padding:75px">
+  <body style = "padding-top:75px">
     <div class="container-fluid">
       <div id="row">
         <div class="row">
@@ -35,10 +35,13 @@
           </div>
           <button type="button" class="btn btn-success" id="filter-btn">Apply Filters</button>
         </div>
-        <div class="row">
-          Info from Filters
-          Number of Nodes, number of edges, Some other stuff as needed
-        </div>
+        <center>
+          <div class="container justify-content-center">
+            <span id="num_nodes_label" class="badge rounded-pill text-bg-info">Number of Nodes: </span> <span id="num_nodes"></span>
+            <span id="num_edges_label" class="badge rounded-pill text-bg-info">Number of Edges:</span> <span id="num_edges"></span><br>
+          </div>
+        </center>
+        
         <div class="row"></div>
 
         <div class="progress-stacked" id="tweet_interaction_colors">
@@ -53,8 +56,8 @@
           </div>
         </div>
       </div>
+
       
-      <div class="container-fluid"><svg id="node-link"></svg></div>
       <div class="offcanvas offcanvas-bottom" data-bs-scroll="true" tabindex="-1" id="offcanvasBottom" aria-labelledby="offcanvasBottomLabel">
           <br>
           <div class="row">
@@ -121,7 +124,7 @@
       
 
     </div>
-
+    <div class="container-fluid"><svg id="node-link"></svg></div>
     
 
   <!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>

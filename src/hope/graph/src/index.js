@@ -27,6 +27,7 @@ slider.oninput = function() {
 
 Promise.all([
     d3.csv('/assets/2023Elections_subsample_nodes.csv'),
+    // d3.csv('/assets/clean_nodes.csv'),
     d3.csv('/assets/2023Elections_subsample_edges.csv')
 ]).then(([nodes, edges]) => {
     $("#tweet_interaction_colors").hide();
@@ -119,10 +120,31 @@ const displayViz = (nodes, edges) => {
     const width = document.getElementById('row').clientWidth;
     // const width = 1400;
     const height = 1000
-
+    console.log("in displayViz");
+    // edges = edges.slice();
+    // edges = edges.filter(edge => {
+    //     console.log(edge.source + " & " + edge.target)
+    //     const sourceNode = nodes.find(node => node.id == edge.source);
+    //     const targetNode = nodes.find(node => node.id == edge.target);
+    //     // return sourceNode && targetNode;
+    //     console.log(sourceNode, " & ", targetNode);
+    //     if(sourceNode != undefined && targetNode != undefined){
+    //         return true;
+    //     }
+    //     return false;
+    // });
+    // edges = edges.filter(edge => {
+    //     console.log(edge.source + " & " + edge.target)
+    //     if(edge.source != undefined && edge.target != undefined){
+    //         return true;
+    //     }
+    //     return false;
+    // });
     console.log("NODES: ", nodes)
     console.log("EDGES: ", edges)
-
+    
+    $('#num_nodes').text(nodes.length);
+    $('#num_edges').text(edges.length);
     d3.select("#node-link").selectAll("*").remove();
 
     const svg = d3.select("#node-link")
@@ -132,6 +154,10 @@ const displayViz = (nodes, edges) => {
     const simulation = d3.forceSimulation(nodes)
         .force("charge", d3.forceManyBody().strength(-100))
         .force("link", d3.forceLink(edges).id(d => d.id))
+        // .distance(20).strength(0.1))
+        // .force("x", d3.forceX())
+        // .force("y", d3.forceY())
+        // .force("center", d3.forceCenter(0, 0))
         .force("center", d3.forceCenter(width / 2, height / 2))
         .on("tick", ticked);
 
@@ -214,6 +240,7 @@ const displayViz = (nodes, edges) => {
             .on("drag", dragged)
             .on("end", dragended)
     }
+    // invalidation.then(() => simulation.stop());
 }
 
 function filterData(nodes, edges) {
@@ -256,6 +283,7 @@ function filterData(nodes, edges) {
         filteredEdges = filteredEdges.filter(edge => {
             const sourceNode = filteredNodes.find(node => node.id === edge.source.id);
             const targetNode = filteredNodes.find(node => node.id === edge.target.id);
+            // return sourceNode && targetNode;
             console.log(sourceNode, " & ", targetNode);
             if(sourceNode != undefined || targetNode != undefined){
                 return true;
@@ -283,8 +311,8 @@ function filterData(nodes, edges) {
             filteredNodes = filteredNodes.sort((a, b) => sumInteractions(b) - sumInteractions(a)).slice(0, topN);
         }
         filteredEdges = filteredEdges.filter(edge =>
-            filteredNodes.find(node => node.id === edge.source.id) &&
-            filteredNodes.find(node => node.id === edge.target.id)
+            filteredNodes.find(node => node.id == edge.source.id) ||
+            filteredNodes.find(node => node.id == edge.target.id)
         );
     }
     displayViz(filteredNodes, filteredEdges);
