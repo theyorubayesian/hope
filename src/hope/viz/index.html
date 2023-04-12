@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hope '23</title>
+
+    <style>
+        .input-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .input-container label {
+            margin-right: 5px;
+        }
+
+        #filter-btn {
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="input-container">
+        <label for="type">Interaction:</label>
+        <select id="type" name="type">
+            <option value="">--Select Interaction--</option>
+            <option value="quote">quote</option>
+            <option value="reply">reply</option>
+            <option value="retweet">retweet</option>
+        </select>
+
+        <label for="timestamp">Tweet Date:</label>
+        <input type="date" id="date" name="date">
+
+        <label for="top">Top tweets:</label>
+        <input type="number" id="top" name="top">
+
+        <button id="filter-btn" onclick="filterData()">Filter</button>
+    </div>
+
+    <svg id="node-link"></svg>
+
+    <div id="tweet_info_container">
+        Tweet: <span id="tweet"></span><br />
+        Tweet Date: <span id="tweet_date"></span><br />
+        Quotes: <span id="n_quote"></span><br />
+        Replies: <span id="n_reply"></span><br />
+        Retweets: <span id="n_retweet"></span><br />
+    </div>
+
+</body>
+<script src="https://d3js.org/d3.v6.min.js"></script>
+<script>
+    const nodes = [
+    { "id": "111", n_quote: "0", n_reply: "0", n_retweet: "0", timestamp: "2023-02-18 11:01:32+00:00", tweet: "nice day", user_id: "211" },
+    { "id": "112", n_quote: "3", n_reply: "7", n_retweet: "5", timestamp: "2023-02-18 11:01:32+00:00", tweet: "Mondays rock!", user_id: "212" },
+    { "id": "113", n_quote: "0", n_reply: "0", n_retweet: "0", timestamp: "2023-02-20 11:01:32+00:00", tweet: "the ocean is blue", user_id: "213" },
+    { "id": "114", n_quote: "3", n_reply: "7", n_retweet: "5", timestamp: "2023-02-20 11:01:32+00:00", tweet: "yeah, it is", user_id: "214" },
+    { "id": "115", n_quote: "3", n_reply: "7", n_retweet: "5", timestamp: "2023-02-19 11:01:32+00:00", tweet: "Mondays rock!", user_id: "215" },
+]
+
+const edges = [
+    { "source": "112", "target": "111", "type": "reply" },
+    { "source": "114", "target": "113", "type": "reply" },
+    { "source": "115", "target": "111", "type": "reply" },
+]
+
+    displayViz = (nodes, edges) => {
+        const width = 1000;
+        const height = 500;
+
+        d3.select("#node-link").selectAll("*").remove();
+
+        const svg = d3.select("#node-link")
+            .attr("width", width)
+            .attr("height", height);
+
+        const simulation = d3.forceSimulation(nodes)
+            .force("charge", d3.forceManyBody().strength(-100))
+            .force("link", d3.forceLink(edges).id(d => d.id))
+            .force("center", d3.forceCenter(width / 2, height / 2))
+            .on("tick", ticked);
+
+        const link = svg.append("g")
+            .attr("class", "links")
+            .attr("stroke", "#999")
+            .attr("stroke-opacity", 0.6)
+            .selectAll("line")
+            .data(edges)
+            .join("line")
+            .attr("stroke-width", d => Math.sqrt(d.value));
+
+        const node = svg.append("g")
+            .attr("class", "nodes")
+            .attr("stroke", "#fff")
+            .attr("stroke-width", 1.5)
+            .selectAll("circle")
+            .data(nodes)
+            .join("circle")
+            .attr("r", 5)
+            .attr("fill", "red")
+            .call(drag(simulation));
+
+        node.on("click", function(event, d) {
+            d3.select("#tweet").text(d.tweet);
+            d3.select("#tweet_date").text(d.timestamp.split(" ")[0]);
+            d3.select("#n_quote").text(d.n_quote);
+            d3.select("#n_reply").text(d.n_reply);
+            d3.select("#n_retweet").text(d.n_retweet);
+        });
+
+        function ticked() {
+            link
+                .attr("x1", d => d.source.x)
+                .attr("y1", d => d.source.y)
+                .attr("x2", d => d.target.x)
+                .attr("y2", d => d.target.y);
+
+            node
+                .attr("cx", d => d.x)
+                .attr("cy", d => d.y);
+        }
+
+        function drag(simulation) {
+
+            function dragstarted(event) {
+                if (!event.active) simulation.alphaTarget(0.3).restart()
+                event.subject.fx = event.subject.x
+                event.subject.fy = event.subject.y
+            }
+
+            function dragged(event) {
+                event.subject.fx = event.x
+                event.subject.fy = event.y
+            }
+
+            function dragended(event) {
+                if (!event.active) simulation.alphaTarget(0)
+                event.subject.fx = null
+                event.subject.fy = null
+            }
+
+            return d3.drag()
+                .on("start", dragstarted)
+                .on("drag", dragged)
+                .on("end", dragended)
+        }
+    }
+
+    displayViz(nodes, edges);
+
+    filterData = () => {
+        const filteredInteraction = document.getElementById("type").value;
+        const filteredDate = document.getElementById("date").value;
+        const topN = document.getElementById("top").value;
+
+        clearTweetInfo();
+
+        let filteredNodes = nodes.slice();
+        let filteredEdges = edges.slice();
+
+        if (filteredDate) {
+            const filteredDateFormatted = new Date(filteredDate);
+            filteredNodes = nodes.filter(node => {
+                const tweetDate = new Date(node.timestamp);
+                return tweetDate.toISOString().slice(0, 10) === filteredDateFormatted.toISOString().slice(0, 10);
+            });
+            filteredEdges = filteredEdges.filter(edge => {
+                const sourceNode = filteredNodes.find(node => node.id === edge.source.id);
+                const targetNode = filteredNodes.find(node => node.id === edge.target.id);
+                return sourceNode && targetNode;
+            });
+        }
+
+        if (filteredInteraction) {
+            filteredEdges = edges.filter(edge => edge.type === filteredInteraction);
+            const filteredNodeIds = new Set(filteredEdges.flatMap(edge => [edge.source.id, edge.target.id]));
+            filteredNodes = nodes.filter(node => filteredNodeIds.has(node.id));
+        }
+
+        if (topN) {
+            if(filteredInteraction)
+                filteredNodes = filteredNodes.sort((a, b) => b[`n_${filteredInteraction}`] - a[`n_${filteredInteraction}`]).slice(0, topN);
+            else {
+                const sumInteractions = node => node.n_retweet + node.n_reply + node.n_quote;
+                filteredNodes = filteredNodes.sort((a, b) => sumInteractions(b) - sumInteractions(a)).slice(0, topN);
+            }
+            filteredEdges = filteredEdges.filter(edge =>
+                filteredNodes.find(node => node.id === edge.source.id) &&
+                filteredNodes.find(node => node.id === edge.target.id)
+            );
+        }
+
+        displayViz(filteredNodes, filteredEdges);
+    }
+
+    const filterButton = document.getElementById("filter-btn");
+    filterButton.addEventListener('change', filterData);
+
+    clearTweetInfo = () => {
+        d3.select("#tweet").text("");
+        d3.select("#tweet_date").text("");
+        d3.select("#n_quote").text("");
+        d3.select("#n_reply").text("");
+        d3.select("#n_retweet").text("");
+    }
+</script>
+
+</html>

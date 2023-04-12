@@ -31,23 +31,12 @@ $enable-shadows: true;
 // Customize some defaults
 $body-color: #333;
 $body-bg: #fff;
-
-// $navbar-dark-color: #081a2d;
-// $navbar-dark-brand-color: #081a2d;
 $border-radius: .4rem;
-$success:  #366da7;
-$body-bg-dark: #081a2d;
-$offcanvas-vertical-height: 40vh;
+$success: #7952b3;
 
 @import "bootstrap/scss/functions"; // Required
 @import "bootstrap/scss/variables"; // Required
-@import "bootstrap/scss/variables-dark";
-@import "bootstrap/scss/maps";
 @import "bootstrap/scss/mixins"; // Required
-@import "bootstrap/scss/offcanvas";
-@import "bootstrap/scss/utilities";
-@import "~bootstrap/scss/helpers";
-@import "~bootstrap/scss/utilities/api";
 
 @import "bootstrap/scss/root"; // Required
 @import "bootstrap/scss/reboot"; // Required
@@ -81,7 +70,7 @@ $offcanvas-vertical-height: 40vh;
 // @import "bootstrap/scss/popover";
 // @import "bootstrap/scss/carousel";
 // @import "bootstrap/scss/spinners";
-
+@import "bootstrap/scss/utilities";
 // @import "bootstrap/scss/print";
 
 
@@ -89,7 +78,7 @@ $offcanvas-vertical-height: 40vh;
 // Custom styles
 //
 
-// @import "icon-list";
+@import "icon-list";
 
 body {
   padding: 3rem 1.5rem;
@@ -98,8 +87,4 @@ body {
 // Style Bootstrap icons
 .bi {
   fill: currentcolor;
-}
-
-#tweet_info_container{
-  color: #fff;
 }
